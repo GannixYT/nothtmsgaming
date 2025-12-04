@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,13 @@
     --nav-bg: rgba(0, 40, 0, 0.5);
     --card-bg: rgba(220, 20, 60, 0.15);
     --modal-bg: rgba(6,40,10,0.75);
+    /* Background / nebula variables (used by themes) */
+    --bg-start: #001000;
+    --bg-end: #000500;
+    --nebula-1: rgba(255,0,0,0.18);
+    --nebula-2: rgba(0,255,0,0.14);
+    --nebula-3: rgba(255,215,0,0.12);
+    --galaxy-overlay: rgba(255,255,255,0.03);
   }
 
   body {
@@ -28,7 +36,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background: radial-gradient(circle at bottom, #001000, #000500 90%);
+    background: radial-gradient(circle at bottom, var(--bg-start), var(--bg-end) 90%);
     position: relative;
   }
 
@@ -36,7 +44,7 @@
   #loader {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at center, #001000, #000500 90%);
+    background: radial-gradient(circle at center, var(--bg-start), var(--bg-end) 90%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -67,43 +75,18 @@
   }
 
   .progress-container {
-    width: 260px;
-    height: 12px;
-    border-radius: 20px;
+    width: 240px;
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    margin-top: 12px;
   }
-
   .progress-bar {
-    height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #ff0000, #00ff00);
-    border-radius: 20px;
-    box-shadow: 0 0 20px #ff0000;
-    transition: width 0.2s ease;
-  }
-
-  .loader-stars {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    overflow: hidden;
-    z-index: -1;
-  }
-
-  .loader-star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.6;
-    animation: twinkle 4s infinite alternate;
-  }
-
-  @keyframes twinkle {
-    0% { opacity: 0.2; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
-    100% { opacity: 0.4; transform: scale(0.95); }
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.12));
+    transition: width 220ms ease;
   }
 
   /* --- GALAXY BACKGROUND --- */
@@ -122,12 +105,57 @@
     animation: twinkle 5s infinite alternate;
   }
 
+  /* Extra particle types: snow, rain, hearts, leaves */
+  .snow, .leaf {
+    position: absolute;
+    color: white;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.9;
+    transform: translateY(-10vh);
+    animation: fallSnow linear infinite;
+  }
+  .leaf { background: rgba(80,180,100,0.95); width:10px; height:6px; border-radius:4px; }
+
+  .raindrop {
+    position: absolute;
+    width: 2px;
+    height: 12px;
+    background: rgba(120,200,255,0.95);
+    border-radius: 2px;
+    opacity: 0.9;
+    transform: translateY(-20vh);
+    animation: fallRain linear infinite;
+  }
+
+  .particle-heart {
+    position: absolute;
+    font-size: 12px;
+    line-height: 12px;
+    color: rgba(255,100,140,0.95);
+    transform: translateY(-8vh) scale(0.9);
+    animation: fallSnow linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes fallSnow {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.95; }
+    100% { transform: translateY(120vh) rotate(180deg); opacity: 0.6; }
+  }
+  @keyframes fallRain {
+    0% { transform: translateY(-20vh); opacity: 0.9; }
+    100% { transform: translateY(120vh); opacity: 0.6; }
+  }
+
   .nebula {
-    background: radial-gradient(circle at 40% 40%, rgba(255,0,0,0.2), transparent 50%),
-                radial-gradient(circle at 70% 70%, rgba(0,255,0,0.15), transparent 50%),
-                radial-gradient(circle at 20% 70%, rgba(255,215,0,0.15), transparent 50%);
+    background: radial-gradient(circle at 40% 40%, var(--nebula-1), transparent 50%),
+                radial-gradient(circle at 70% 70%, var(--nebula-2), transparent 50%),
+                radial-gradient(circle at 20% 70%, var(--nebula-3), transparent 50%);
     filter: blur(80px);
     animation: driftNebula 120s linear infinite;
+    transition: background 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
   }
 
   @keyframes driftNebula {
@@ -136,7 +164,7 @@
   }
 
   .galaxy {
-    background: radial-gradient(circle, rgba(255,255,255,0.03), transparent 60%);
+    background: radial-gradient(circle, var(--galaxy-overlay), transparent 60%);
     border-radius: 50%;
     width: 300px;
     height: 300px;
@@ -144,7 +172,12 @@
     left: 30%;
     filter: blur(100px);
     animation: rotateGalaxy 300s linear infinite;
+    transition: background 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
   }
+
+  /* Smooth fade helper when switching themes */
+  .main-site, .starfield { transition: opacity 220ms ease; }
+  .theme-fade .main-site, .theme-fade .starfield, .theme-fade .nebula, .theme-fade .galaxy { opacity: 0; }
 
   @keyframes rotateGalaxy {
     0% { transform: rotate(0deg); }
@@ -392,6 +425,204 @@
     .mc-modal { width: 92%; padding:14px; }
     .game-card{height:64px;}
   }
+  /* ---------- Theme Overrides ---------- */
+  :root { transition: background 0.45s ease, color 0.45s ease; }
+  .theme-galaxy {
+    --accent: #7f5bff;
+    --text: #e6f2ff;
+    --nav-bg: rgba(5,8,20,0.6);
+    --card-bg: rgba(70,20,120,0.12);
+    --modal-bg: rgba(6,8,30,0.85);
+    --bg-start: #07001a;
+    --bg-end: #000014;
+    --nebula-1: rgba(130,80,255,0.16);
+    --nebula-2: rgba(46,200,255,0.10);
+    --nebula-3: rgba(255,150,240,0.08);
+    --galaxy-overlay: rgba(200,200,255,0.04);
+  }
+  .theme-ocean {
+    --accent: #00c2ff;
+    --text: #eafcff;
+    --nav-bg: rgba(0,20,30,0.6);
+    --card-bg: rgba(0,80,120,0.08);
+    --modal-bg: rgba(2,20,30,0.8);
+    --bg-start: #001426;
+    --bg-end: #000814;
+    --nebula-1: rgba(0,140,255,0.14);
+    --nebula-2: rgba(0,210,255,0.10);
+    --nebula-3: rgba(120,200,255,0.06);
+    --galaxy-overlay: rgba(220,245,255,0.03);
+  }
+  .theme-neon {
+    --accent: #39ff14;
+    --text: #ffffff;
+    --nav-bg: rgba(0,0,0,0.7);
+    --card-bg: rgba(57,255,20,0.06);
+    --modal-bg: rgba(0,0,0,0.88);
+    --bg-start: #001100;
+    --bg-end: #000000;
+    --nebula-1: rgba(57,255,20,0.14);
+    --nebula-2: rgba(0,255,213,0.10);
+    --nebula-3: rgba(57,255,140,0.06);
+    --galaxy-overlay: rgba(200,255,200,0.035);
+  }
+  .theme-cozy {
+    --accent: #ff8c42;
+    --text: #fff7f0;
+    --nav-bg: rgba(40,10,5,0.55);
+    --card-bg: rgba(255,140,66,0.06);
+    --modal-bg: rgba(30,12,8,0.85);
+    --bg-start: #2b0b00;
+    --bg-end: #090200;
+    --nebula-1: rgba(255,140,66,0.12);
+    --nebula-2: rgba(255,200,140,0.08);
+    --nebula-3: rgba(180,120,80,0.06);
+    --galaxy-overlay: rgba(255,230,210,0.03);
+  }
+  .theme-christmas {
+    --accent: #ff0000;
+    --text: #f3f9ff;
+    --nav-bg: rgba(0,40,0,0.6);
+    --card-bg: rgba(220,20,60,0.15);
+    --modal-bg: rgba(6,40,10,0.85);
+    --bg-start: #031008;
+    --bg-end: #000406;
+    --nebula-1: rgba(180,30,30,0.16);
+    --nebula-2: rgba(0,120,40,0.12);
+    --nebula-3: rgba(255,215,80,0.08);
+    --galaxy-overlay: rgba(255,245,240,0.02);
+  }
+  .theme-default {
+    --accent: #9fb0ff;
+    --text: #e6f3ff;
+    --nav-bg: rgba(0,0,20,0.55);
+    --card-bg: rgba(255,255,255,0.02);
+    --modal-bg: rgba(0,0,10,0.75);
+    --bg-start: #000014;
+    --bg-end: #000002;
+    --nebula-1: rgba(180,200,255,0.06);
+    --nebula-2: rgba(120,150,255,0.04);
+    --nebula-3: rgba(255,255,255,0.03);
+    --galaxy-overlay: rgba(255,255,255,0.035);
+  }
+
+  /* Additional themes */
+  .theme-sunset {
+    --accent: #ff7a59;
+    --text: #fff6f2;
+    --nav-bg: rgba(40,8,0,0.55);
+    --card-bg: rgba(255,120,90,0.04);
+    --modal-bg: rgba(30,8,4,0.85);
+    --bg-start: #2b0710;
+    --bg-end: #050002;
+    --nebula-1: rgba(255,120,90,0.12);
+    --nebula-2: rgba(255,200,140,0.06);
+    --nebula-3: rgba(255,220,200,0.04);
+    --galaxy-overlay: rgba(255,200,180,0.03);
+  }
+  .theme-forest {
+    --accent: #3bbf4a;
+    --text: #eaffea;
+    --nav-bg: rgba(2,20,8,0.6);
+    --card-bg: rgba(10,80,30,0.06);
+    --modal-bg: rgba(6,16,8,0.85);
+    --bg-start: #021005;
+    --bg-end: #000201;
+    --nebula-1: rgba(0,130,60,0.12);
+    --nebula-2: rgba(0,70,30,0.06);
+    --nebula-3: rgba(120,200,140,0.03);
+    --galaxy-overlay: rgba(200,255,220,0.02);
+  }
+  .theme-retro {
+    --accent: #ffcc33;
+    --text: #fff9f0;
+    --nav-bg: rgba(30,8,10,0.6);
+    --card-bg: rgba(255,200,80,0.04);
+    --modal-bg: rgba(12,6,4,0.85);
+    --bg-start: #1b0010;
+    --bg-end: #000007;
+    --nebula-1: rgba(255,140,80,0.12);
+    --nebula-2: rgba(140,80,200,0.06);
+    --nebula-3: rgba(255,220,120,0.04);
+    --galaxy-overlay: rgba(255,240,200,0.03);
+  }
+  .theme-aurora {
+    --accent: #7efcff;
+    --text: #eaffff;
+    --nav-bg: rgba(2,8,12,0.6);
+    --card-bg: rgba(120,255,200,0.04);
+    --modal-bg: rgba(4,8,12,0.85);
+    --bg-start: #00121b;
+    --bg-end: #000011;
+    --nebula-1: rgba(120,255,200,0.12);
+    --nebula-2: rgba(80,200,255,0.08);
+    --nebula-3: rgba(160,200,255,0.04);
+    --galaxy-overlay: rgba(200,255,250,0.03);
+  }
+  .theme-matrix {
+    --accent: #00ff66;
+    --text: #dfffe6;
+    --nav-bg: rgba(0,4,0,0.7);
+    --card-bg: rgba(0,30,8,0.04);
+    --modal-bg: rgba(0,8,2,0.85);
+    --bg-start: #000007;
+    --bg-end: #000001;
+    --nebula-1: rgba(0,255,120,0.08);
+    --nebula-2: rgba(0,180,80,0.06);
+    --nebula-3: rgba(80,255,160,0.03);
+    --galaxy-overlay: rgba(200,255,220,0.02);
+  }
+  .theme-winter {
+    --accent: #77d1ff;
+    --text: #f3fbff;
+    --nav-bg: rgba(4,8,20,0.6);
+    --card-bg: rgba(200,240,255,0.03);
+    --modal-bg: rgba(6,10,20,0.85);
+    --bg-start: #001021;
+    --bg-end: #000004;
+    --nebula-1: rgba(200,230,255,0.10);
+    --nebula-2: rgba(160,200,255,0.06);
+    --nebula-3: rgba(220,240,255,0.04);
+    --galaxy-overlay: rgba(240,250,255,0.035);
+  }
+
+  .theme-btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; margin:6px; }
+  .theme-btn.active { outline: 3px solid rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+  .game-search { display:flex; gap:10px; align-items:center; justify-content:center; margin:14px 0 8px; }
+  .game-search input { width: 320px; max-width:80%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.25); color:var(--text); font-weight:700; }
+  .no-results { text-align:center; color:rgba(243,247,255,0.65); margin-top:12px; display:none; }
+
+  /* Settings layout: left mini-sidebar + panels */
+  .settings-layout { display:flex; gap:18px; align-items:flex-start; justify-content:center; margin-top:18px; }
+  .settings-sidebar { width:120px; background: rgba(255,255,255,0.02); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .settings-sidebar button { width:100%; background:transparent; border:none; color:var(--text); padding:10px; border-radius:8px; cursor:pointer; display:flex; gap:8px; align-items:center; justify-content:flex-start; font-weight:700; }
+  .settings-sidebar button:hover { background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+  .settings-sidebar button.active { background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); transform: translateY(-2px); }
+  .settings-panel-wrap { flex:1; min-width:320px; max-width:760px; }
+  .settings-panel { display:none; background: var(--card-bg); padding:14px; border-radius:12px; box-shadow: 0 8px 30px rgba(0,0,0,0.45); }
+  .settings-panel.active { display:block; }
+  .settings-icon { width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; }
+  @media (max-width:780px){ .settings-layout{flex-direction:column; align-items:stretch;} .settings-sidebar{flex-direction:row; width:100%; overflow:auto; padding:6px; } .settings-sidebar button{flex:1; justify-content:center;} .settings-panel-wrap{width:100%;} }
+
+  /* Dropdown styles */
+  .theme-dropdown { position: relative; display: inline-block; }
+  .theme-dropdown-menu {
+    position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.5));
+    border-radius: 10px; padding: 10px; display: grid; gap:8px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    min-width: 360px; box-shadow: 0 6px 30px rgba(0,0,0,0.6); z-index: 40; visibility: hidden; opacity: 0; transition: opacity 120ms ease, visibility 120ms;
+    max-height: 320px; overflow-y: auto; padding-right: 8px;
+  }
+  .theme-dropdown-menu.show { visibility: visible; opacity: 1; }
+  .theme-dropdown-item { display:flex; gap:8px; align-items:center; padding:8px; border-radius:8px; cursor:pointer; border:1px solid rgba(255,255,255,0.03); }
+  .theme-dropdown-item.active { outline: 2px solid rgba(255,255,255,0.06); transform: translateY(-1px); }
+  .theme-preview { width:40px; height:30px; border-radius:6px; flex:0 0 40px; box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
+  .theme-label { font-weight:700; color:var(--text); }
+  /* Hide fancy effects when disabled */
+  .no-effects .nebula, .no-effects .galaxy, .no-effects .starfield, .no-effects .loader-stars { display:none !important; }
+  .no-effects .main-site { background: radial-gradient(circle at bottom, var(--bg-start), var(--bg-end) 90%); }
 </style>
 </head>
 <body>
@@ -429,7 +660,7 @@
   <div class="content active" id="homeTab" style="position: relative; height: 100%;">
     <h1>🎄 Welcome to HTMS Gaming 🎄</h1>
     <p>🎅 Explore your personal galaxy of fun and creativity. ⛄</p>
-    <p style="font-size: 1.1rem; margin: 15px 0; font-weight: 600;">Have a good Thanksgiving and Christmas! 🦃🎄</p>
+    <p style="font-size: 1.1rem; margin: 15px 0; font-weight: 600;">Have a Merry Christmas! 🎄✨</p>
     <span class="home-rgb">PLEASE CHECK ANNOUNCEMENTS</span>
     <p>You can share this with anyone (just give them the link to the doc its not that hard</p>
     <p>Credits To Chris (christopherafton on discord)</p>
@@ -473,7 +704,12 @@
   <!-- GAMES -->
   <div class="content" id="gamesTab">
     <h1 class="rgb-text">🎮 Please do your work before playing =)🎁</h1>
+    <div class="game-search">
+      <input id="gameSearch" type="search" placeholder="Search games by name." aria-label="Search games" />
+      <button id="clearSearch" class="theme-btn" style="background:linear-gradient(90deg,var(--accent),#ffffff22); color:var(--text);">Clear</button>
+    </div>
     <div class="games-grid" id="gamesGrid"></div>
+    <div class="no-results" id="noResults">No games found. Try a different search.</div>
 
     <div class="game-container" id="gameContainer" style="display:none;">
       <div class="game-controls">
@@ -503,23 +739,59 @@
 
   <!-- SETTINGS -->
   <div class="content" id="settingsTab">
-    <h1>⚙️ Holiday Settings 🎄</h1>
-    <p>Wanna open in about:blank?</p>
-    <button id="openAboutBlankBtn" style="padding: 10px 20px; margin-top: 10px; background: linear-gradient(90deg, #ff0000, #00ff00); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;">Open in about:blank</button>
-    
-    <p style="margin-top: 30px; font-size: 1rem; font-weight: 600;">🚨 Panic Button Enabled</p>
-    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-      <button id="panicEnabledYesBtn" style="padding: 10px 20px; background: linear-gradient(90deg, #00ff00, #33ff33); color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">Yes</button>
-      <button id="panicEnabledNoBtn" style="padding: 10px 20px; background: linear-gradient(90deg, #ff3333, #ff0000); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">No</button>
+    <h1>⚙️Settings⚙️</h1>
+    <div class="settings-layout">
+      <div class="settings-sidebar" role="tablist" aria-label="Settings Tabs">
+        <button class="settings-tab-btn active" data-panel="general" role="tab" aria-selected="true"><span class="settings-icon">⚙️</span> <span style="margin-left:6px;">General</span></button>
+        <button class="settings-tab-btn" data-panel="panic" role="tab" aria-selected="false"><span class="settings-icon">🚨</span> <span style="margin-left:6px;">Panic</span></button>
+        <button class="settings-tab-btn" data-panel="themes" role="tab" aria-selected="false"><span class="settings-icon">🎨</span> <span style="margin-left:6px;">Themes</span></button>
+        <button class="settings-tab-btn" data-panel="about" role="tab" aria-selected="false"><span class="settings-icon">ℹ️</span> <span style="margin-left:6px;">About</span></button>
+      </div>
+
+      <div class="settings-panel-wrap">
+        <div class="settings-panel active" id="panel-general">
+          <h2 style="margin-top:0;">General</h2>
+          <p>Wanna open in about:blank?</p>
+          <button id="openAboutBlankBtn" style="padding: 10px 20px; margin-top: 10px; background: linear-gradient(90deg, var(--accent), #00ff00); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;">Open in about:blank</button>
+          <p style="margin-top:12px; color:var(--text);">Useful shortcuts and general site options live here.</p>
+        </div>
+
+        <div class="settings-panel" id="panel-panic">
+          <h2 style="margin-top:0;">Panic Button</h2>
+          <p style="margin-top: 10px; font-size: 1rem; font-weight: 600;">🚨 Panic Button Enabled</p>
+          <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+            <button id="panicEnabledYesBtn" style="padding: 10px 20px; background: linear-gradient(90deg, #00ff00, #33ff33); color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">Yes</button>
+            <button id="panicEnabledNoBtn" style="padding: 10px 20px; background: linear-gradient(90deg, #ff3333, #ff0000); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">No</button>
+          </div>
+          <p id="panicToggleStatus" style="margin-top: 10px; font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">Status: Disabled</p>
+
+          <p style="margin-top: 20px; font-size: 1rem; font-weight: 600;">🚨 Set Panic Key</p>
+          <p style="font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">Press any key to set as panic button</p>
+          <button id="setPanicKeyBtn" style="padding: 10px 20px; margin-top: 10px; background: linear-gradient(90deg, #ff3333, #ff0000); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">Set Panic Key</button>
+          <p id="panicKeyStatus" style="margin-top: 10px; font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">No panic key set</p>
+        </div>
+
+        <div class="settings-panel" id="panel-themes">
+          <h2 style="margin-top:0;">Themes</h2>
+          <p style="text-align:left; color:rgba(243,247,255,0.75);">Pick a theme — your choice of looks. Saved to your browser.</p>
+          <div id="themeControls" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start; margin-top:12px;">
+            <p style="color:var(--text); opacity:0.9; margin:6px; font-weight:700;">Use the dropdown below to pick a theme.</p>
+          </div>
+          <div style="margin-top:12px;">
+            <div id="themeDropdown" class="theme-dropdown">
+              <button id="themeDropdownToggle" class="theme-btn" style="display:flex; align-items:center; gap:8px;">Theme: <span id="currentThemeLabel" style="font-weight:700; margin-left:6px;">Default</span> ▾</button>
+              <div id="themeDropdownMenu" class="theme-dropdown-menu" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="panel-about">
+          <h2 style="margin-top:0;">About</h2>
+          <p style="color:var(--text);">(🎅 more updates soon 🎄)</p>
+          <p style="margin-top:8px; color:rgba(243,247,255,0.8);">Credits To Chris (christopherafton on discord)</p>
+        </div>
+      </div>
     </div>
-    <p id="panicToggleStatus" style="margin-top: 10px; font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">Status: Disabled</p>
-    
-    <p style="margin-top: 30px; font-size: 1rem; font-weight: 600;">🚨 Set Panic Key</p>
-    <p style="font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">Press any key to set as panic button</p>
-    <button id="setPanicKeyBtn" style="padding: 10px 20px; margin-top: 10px; background: linear-gradient(90deg, #ff3333, #ff0000); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: transform 0.2s;">Set Panic Key</button>
-    <p id="panicKeyStatus" style="margin-top: 10px; font-size: 0.9rem; color: rgba(243, 247, 255, 0.7);">No panic key set</p>
-    
-    <p style="margin-top: 20px; font-size: 0.9rem; color: rgba(243, 247, 255, 0.6);">(🎅 more updates soon 🎄)</p>
   </div>
 </div>
 
@@ -539,6 +811,7 @@
 
 <!-- Panic Key Display -->
 <div id="panicKeyDisplay"></div>
+ 
 
   <script>
 /* ---------------- LOADER ---------------- */
@@ -546,18 +819,72 @@ const loader = document.getElementById("loader");
 const progressBar = document.getElementById("progressBar");
 const mainSite = document.getElementById("mainSite");
 const loaderStars = document.getElementById("loaderStars");
+// Theme -> default particle type mapping
+const themeParticleDefaults = {
+  winter: 'snow',
+  christmas: 'snow',
+  ocean: 'rain',
+  default: 'stars',
+  galaxy: 'stars',
+  neon: 'stars',
+  cozy: 'stars',
+  sunset: 'stars',
+  forest: 'leaves',
+  retro: 'stars',
+  aurora: 'stars',
+  matrix: 'rain'
+};
 
-// create loader stars
-for (let i = 0; i < 100; i++) {
-  const star = document.createElement("div");
-  star.className = "loader-star";
-  const size = Math.random() * 2 + "px";
-  star.style.width = size;
-  star.style.height = size;
-  star.style.top = Math.random() * 100 + "%";
-  star.style.left = Math.random() * 100 + "%";
-  star.style.animationDelay = Math.random() * 4 + "s";
-  loaderStars.appendChild(star);
+function getSavedThemeName(){
+  try{ return localStorage.getItem('htms_theme') || 'default'; }catch(e){ return 'default'; }
+}
+
+function getParticleTypeForTheme(theme){
+  try{
+    const map = JSON.parse(localStorage.getItem('htms_theme_particles')||'{}');
+    if(map && map[theme]) return map[theme];
+  }catch(e){}
+  return themeParticleDefaults[theme] || 'stars';
+}
+
+// create loader particles (controlled by effects setting). Accepts count and optional type.
+function createLoaderStars(count, type){
+  if(!loaderStars) return;
+  loaderStars.innerHTML = '';
+  const theme = getSavedThemeName();
+  const particleType = type || getParticleTypeForTheme(theme) || 'stars';
+  for (let i = 0; i < count; i++) {
+    let el;
+    if(particleType === 'snow' || particleType === 'leaves'){
+      el = document.createElement('div');
+      el.className = particleType === 'snow' ? 'snow' : 'leaf';
+      const size = (Math.random()*6 + 4) + 'px';
+      el.style.width = size;
+      el.style.height = particleType === 'leaf' ? (parseInt(size,10)*0.6+'px') : size;
+    } else if(particleType === 'rain'){
+      el = document.createElement('div');
+      el.className = 'raindrop';
+      const h = (Math.random()*10 + 8) + 'px';
+      el.style.height = h;
+      el.style.width = (Math.random()*2 + 1) + 'px';
+    } else if(particleType === 'hearts'){
+      el = document.createElement('div');
+      el.className = 'particle-heart';
+      el.textContent = '♥';
+    } else {
+      el = document.createElement('div');
+      el.className = 'star';
+      const size = Math.random() * 2 + 'px';
+      el.style.width = size;
+      el.style.height = size;
+    }
+
+    el.style.top = Math.random() * 100 + '%';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.animationDuration = (Math.random() * 6 + 4) + 's';
+    el.style.animationDelay = Math.random() * 4 + 's';
+    loaderStars.appendChild(el);
+  }
 }
 
 // simulate loading
@@ -623,6 +950,61 @@ function openSelfInBlank() {
 openAboutBlankBtn.onclick = () => {
   openSelfInBlank();
 };
+
+/* ---------------- AI SETTINGS UI ---------------- */
+// Wire up AI settings inputs saved to localStorage
+(function initAISettings(){
+  const aiProvider = document.getElementById('aiProvider');
+  const aiKey = document.getElementById('aiKey');
+  const aiSaveBtn = document.getElementById('aiSaveBtn');
+  const aiTestBtn = document.getElementById('aiTestBtn');
+  const aiClearBtn = document.getElementById('aiClearBtn');
+  const aiStatus = document.getElementById('aiStatus');
+
+  if(!aiProvider || !aiKey || !aiSaveBtn) return;
+
+  function load(){
+    const provider = localStorage.getItem('htms_ai_provider')||'';
+    const key = localStorage.getItem('htms_ai_key')||'';
+    aiProvider.value = provider;
+    aiKey.value = key;
+    aiStatus.textContent = provider ? `Provider: ${provider} — ${key? 'key set':'no key'}` : 'No key configured.';
+  }
+
+  async function testConnection(){
+    const provider = aiProvider.value;
+    const key = aiKey.value.trim();
+    aiStatus.textContent = 'Testing...';
+    try{
+      if(!provider || !key){
+        aiStatus.textContent = 'Please choose provider and enter key.';
+        return;
+      }
+      let res;
+      if(provider === 'groq'){
+        res = await fetch('https://api.groq.com/openai/v1/models', { headers:{ 'Authorization':'Bearer '+key } });
+      } else if(provider === 'huggingface'){
+        res = await fetch('https://api-inference.huggingface.co/models/gpt2', { method:'GET', headers:{ 'Authorization':'Bearer '+key } });
+      } else {
+        // generic ping using provided key on octoai is not supported
+        res = { ok:true };
+      }
+      if(res && res.ok) aiStatus.textContent = 'Connection OK';
+      else aiStatus.textContent = 'Connection failed';
+    }catch(e){ aiStatus.textContent = 'Connection failed'; console.error(e); }
+  }
+
+  aiSaveBtn.addEventListener('click', ()=>{
+    localStorage.setItem('htms_ai_provider', aiProvider.value);
+    localStorage.setItem('htms_ai_key', aiKey.value.trim());
+    aiStatus.textContent = aiProvider.value ? `Saved provider ${aiProvider.value}` : 'Saved (no provider)';
+  });
+
+  aiTestBtn.addEventListener('click', testConnection);
+  aiClearBtn.addEventListener('click', ()=>{ localStorage.removeItem('htms_ai_provider'); localStorage.removeItem('htms_ai_key'); aiProvider.value=''; aiKey.value=''; aiStatus.textContent='Cleared.'; });
+
+  load();
+})();
 
 /* --- Panic Key Setup --- */
 const setPanicKeyBtn = document.getElementById("setPanicKeyBtn");
@@ -763,7 +1145,7 @@ const games = [
   "Celeste PICO.html","BitLife.html","Bank Robbery 2.html","Angry Birds.html","Angry Birds Showdown.html",
   "Amanda the Adventurer.html","99 Balls.html","Tattletail.html","ShellShocker.html","Swordfight!!.html",
   "Super Star Car.html","Spiral Roll.html","Money Rush.html","Madalin Stunt Cars 3.html","Madalin Stunt Cars 2.html",
-  "Layers Roll.html","JustFall.lol.html","Idle Dice.html","WebFishing.html","Soundboard.html","Highway Racer 2 REMASTERED.html"
+  "Layers Roll.html","JustFall.lol.html","Idle Dice.html","WebFishing.html","Soundboard.html","Highway Racer 2 REMASTERED.html","Happy Wheels.html","Clash Of Viking.html","Death Run 3D.html","Flip Master.html","Off.html","Harvest.io.html"
 ];
 
 const fnafDisplayNames = {
@@ -870,16 +1252,53 @@ document.addEventListener("keyup", (e) => {
 
 /* ---------------- STARFIELD ---------------- */
 const starfield = document.getElementById("starfield");
-for(let i=0;i<300;i++){
-  const star = document.createElement("div");
-  star.className="star";
-  const size = Math.random()*2 +1+"px";
-  star.style.width = size;
-  star.style.height = size;
-  star.style.top = Math.random()*100+"%";
-  star.style.left = Math.random()*100+"%";
-  star.style.opacity = Math.random();
-  starfield.appendChild(star);
+function createStarfield(count, type){
+  if(!starfield) return;
+  starfield.innerHTML = '';
+  const theme = getSavedThemeName();
+  const particleType = type || getParticleTypeForTheme(theme) || 'stars';
+  for(let i=0;i<count;i++){
+    let el;
+    if(particleType === 'snow' || particleType === 'leaves'){
+      el = document.createElement('div');
+      el.className = particleType === 'snow' ? 'snow' : 'leaf';
+      const size = (Math.random()*8 + 4) + 'px';
+      el.style.width = size;
+      el.style.height = particleType === 'leaf' ? (parseInt(size,10)*0.6 + 'px') : size;
+    } else if(particleType === 'rain'){
+      el = document.createElement('div');
+      el.className = 'raindrop';
+      el.style.height = (Math.random()*14 + 8) + 'px';
+      el.style.width = (Math.random()*2 + 1) + 'px';
+    } else if(particleType === 'hearts'){
+      el = document.createElement('div');
+      el.className = 'particle-heart';
+      el.textContent = '♥';
+    } else {
+      el = document.createElement('div');
+      el.className = 'star';
+      const size = Math.random()*2 + 1 + 'px';
+      el.style.width = size;
+      el.style.height = size;
+      el.style.opacity = Math.random();
+    }
+
+    el.style.top = Math.random() * 100 + '%';
+    el.style.left = Math.random() * 100 + '%';
+    // vary animation speed a bit
+    el.style.animationDuration = (Math.random() * 10 + 6) + 's';
+    el.style.animationDelay = Math.random() * 6 + 's';
+    starfield.appendChild(el);
+  }
+}
+
+// Update particle display for a theme (applies both loader + main starfield)
+function updateParticlesForTheme(themeName){
+  const cnt = parseInt(localStorage.getItem('htms_particle_count')||'300',10) || 300;
+  const loaderCount = Math.min(120, Math.max(0, Math.round(cnt/3)));
+  const type = getParticleTypeForTheme(themeName || getSavedThemeName());
+  createLoaderStars(loaderCount, type);
+  createStarfield(cnt, type);
 }
 
 /* ---------------- MINECRAFT MODAL ---------------- */
@@ -894,6 +1313,225 @@ function openMinecraftModal(){
   mcBackdrop.style.opacity = "0";
   requestAnimationFrame(()=> mcBackdrop.style.opacity = "1");
 }
+
+/* ---------------- EFFECTS & CUSTOM BACKGROUND ---------------- */
+const effectsToggleBtn = document.createElement('button');
+// We'll create UI elements inside Themes panel - find container
+const themesPanel = document.getElementById('panel-themes');
+if(themesPanel){
+  const customWrap = document.createElement('div');
+  customWrap.style.marginTop = '14px';
+  customWrap.innerHTML = `
+    <h3 style="margin:6px 0;">Custom Background</h3>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start;">
+      <div style="flex:1; min-width:240px;">
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+          <div style="font-weight:700; width:64px;">Gradient</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <label style="font-size:0.85rem;">Start</label>
+            <input type="color" id="customBgStart" title="Gradient start color" />
+            <label style="font-size:0.85rem;">End</label>
+            <input type="color" id="customBgEnd" title="Gradient end color" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+          <div style="font-weight:700; width:64px;">Nebula</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <label style="font-size:0.85rem;">1</label>
+            <input type="color" id="customNeb1" title="Nebula color 1" />
+            <label style="font-size:0.85rem;">2</label>
+            <input type="color" id="customNeb2" title="Nebula color 2" />
+            <label style="font-size:0.85rem;">3</label>
+            <input type="color" id="customNeb3" title="Nebula color 3" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+          <div style="font-weight:700; width:64px;">Particles</div>
+          <div style="display:flex; gap:8px; align-items:center; width:100%;">
+            <input id="particleCount" type="range" min="0" max="600" step="10" style="flex:1;" />
+            <span id="particleCountLabel" style="min-width:44px; text-align:right; font-weight:700;"></span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+          <div style="font-weight:700; width:64px;">Style</div>
+          <select id="particleTypeSelect" style="padding:6px 8px; border-radius:8px; background:rgba(0,0,0,0.12); color:var(--text);">
+            <option value="stars">Stars</option>
+            <option value="snow">Snow</option>
+            <option value="rain">Rain</option>
+            <option value="leaves">Leaves</option>
+            <option value="hearts">Hearts</option>
+          </select>
+          <span style="opacity:0.8; font-size:12px; margin-left:6px;">Per-theme override saved automatically</span>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+          <button id="effectsToggle" class="theme-btn" style="padding:8px 12px;">Effects: <span id="effectsLabel">Enabled</span></button>
+          <button id="applyCustomBtn" class="theme-btn" style="padding:8px 12px;">Apply</button>
+          <button id="resetCustomBtn" class="theme-btn" style="padding:8px 12px; background:transparent; border:1px solid rgba(255,255,255,0.06);">Reset</button>
+        </div>
+      </div>
+
+      <div style="width:220px;">
+        <div style="font-weight:700; margin-bottom:8px;">Preview</div>
+        <div id="bgPreview" style="width:220px; height:140px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); overflow:hidden; position:relative;"></div>
+        <div style="font-size:12px; opacity:0.85; margin-top:6px;">Tip: change colors to see preview. Click Apply to save.</div>
+      </div>
+    </div>
+  `;
+  themesPanel.appendChild(customWrap);
+
+  // get controls
+  const customBgStart = document.getElementById('customBgStart');
+  const customBgEnd = document.getElementById('customBgEnd');
+  const customNeb1 = document.getElementById('customNeb1');
+  const customNeb2 = document.getElementById('customNeb2');
+  const customNeb3 = document.getElementById('customNeb3');
+  const particleTypeSelect = document.getElementById('particleTypeSelect');
+  const particleCount = document.getElementById('particleCount');
+  const particleCountLabel = document.getElementById('particleCountLabel');
+  const effectsToggle = document.getElementById('effectsToggle');
+  const effectsLabel = document.getElementById('effectsLabel');
+  const applyCustomBtn = document.getElementById('applyCustomBtn');
+
+  // load saved custom settings
+  const savedCustom = (() => { try{ return JSON.parse(localStorage.getItem('htms_custom_bg')||'null'); }catch(e){ return null; } })();
+  const savedEffects = (()=>{ try{ return JSON.parse(localStorage.getItem('htms_effects')||'true'); }catch(e){ return true; } })();
+  const savedParticleCount = parseInt(localStorage.getItem('htms_particle_count')||'300',10)||300;
+
+  // defaults
+  const defaults = { bgStart:'#000014', bgEnd:'#000002', neb1:'#b4c8ff', neb2:'#7896ff', neb3:'#ffffff', particleCount:300 };
+
+  function setControlValues(obj){
+    customBgStart.value = obj.bgStart || defaults.bgStart;
+    customBgEnd.value = obj.bgEnd || defaults.bgEnd;
+    customNeb1.value = obj.neb1 || defaults.neb1;
+    customNeb2.value = obj.neb2 || defaults.neb2;
+    customNeb3.value = obj.neb3 || defaults.neb3;
+    particleCount.value = obj.particleCount || defaults.particleCount;
+    particleCountLabel.textContent = particleCount.value;
+    try{
+      const currentTheme = (localStorage.getItem('htms_theme') || 'default');
+      const savedMap = JSON.parse(localStorage.getItem('htms_theme_particles')||'{}');
+      const curType = savedMap[currentTheme] || getParticleTypeForTheme(currentTheme) || 'stars';
+      if(particleTypeSelect) particleTypeSelect.value = curType;
+    }catch(e){}
+  }
+
+  setControlValues(Object.assign({}, defaults, savedCustom || {}, { particleCount: savedParticleCount }));
+
+  // live preview and improved controls
+  const bgPreview = document.getElementById('bgPreview');
+  const resetCustomBtn = document.getElementById('resetCustomBtn');
+
+  function updatePreview(){
+    try{
+      const start = customBgStart.value || defaults.bgStart;
+      const end = customBgEnd.value || defaults.bgEnd;
+      const neb1 = hexToRgba(customNeb1.value || defaults.neb1, 0.12);
+      const neb2 = hexToRgba(customNeb2.value || defaults.neb2, 0.08);
+      const neb3 = hexToRgba(customNeb3.value || defaults.neb3, 0.06);
+      if(bgPreview){
+        bgPreview.style.background = `radial-gradient(circle at bottom, ${start}, ${end} 90%)`;
+        // overlay simple nebulas as gradients
+        bgPreview.innerHTML = `<div style="position:absolute; inset:0; background: radial-gradient(circle at 30% 30%, ${neb1}, transparent 40%), radial-gradient(circle at 70% 70%, ${neb2}, transparent 40%), radial-gradient(circle at 20% 70%, ${neb3}, transparent 40%); filter: blur(36px);"></div>`;
+      }
+      particleCountLabel.textContent = particleCount.value;
+    }catch(e){ console.error('preview error', e); }
+  }
+
+  // wire live preview updates
+  [customBgStart, customBgEnd, customNeb1, customNeb2, customNeb3].forEach(inp => { if(inp) inp.addEventListener('input', updatePreview); });
+  if(particleCount) particleCount.addEventListener('input', ()=> { particleCountLabel.textContent = particleCount.value; });
+
+  // Apply button: save and apply without alert (brief subtle feedback)
+  applyCustomBtn.addEventListener('click', ()=>{
+    applyCustomBackground();
+    try{ applyCustomBtn.textContent = 'Saved ✓'; setTimeout(()=> applyCustomBtn.textContent = 'Apply', 1200); }catch(e){}
+  });
+
+  // Reset button: restore defaults (does not clear per-theme mapping)
+  resetCustomBtn.addEventListener('click', ()=>{
+    setControlValues(defaults);
+    updatePreview();
+    applyCustomBackground();
+    try{ resetCustomBtn.textContent = 'Reset ✓'; setTimeout(()=> resetCustomBtn.textContent = 'Reset', 1200); }catch(e){}
+  });
+
+  // Particle style selection already wired earlier; ensure preview updates when changed
+  if(particleTypeSelect) particleTypeSelect.addEventListener('change', ()=>{ try{ const themeName = localStorage.getItem('htms_theme') || 'default'; const map = JSON.parse(localStorage.getItem('htms_theme_particles')||'{}'); map[themeName] = particleTypeSelect.value; localStorage.setItem('htms_theme_particles', JSON.stringify(map)); updateParticlesForTheme(themeName); }catch(e){} });
+
+  // initialize preview and labels
+  updatePreview();
+
+  function applyCustomBackground(){
+    const s = document.documentElement.style;
+    s.setProperty('--bg-start', customBgStart.value);
+    s.setProperty('--bg-end', customBgEnd.value);
+    s.setProperty('--nebula-1', hexToRgba(customNeb1.value, 0.12));
+    s.setProperty('--nebula-2', hexToRgba(customNeb2.value, 0.08));
+    s.setProperty('--nebula-3', hexToRgba(customNeb3.value, 0.06));
+    s.setProperty('--galaxy-overlay', hexToRgba('#ffffff', 0.03));
+    localStorage.setItem('htms_custom_bg', JSON.stringify({ bgStart:customBgStart.value, bgEnd:customBgEnd.value, neb1:customNeb1.value, neb2:customNeb2.value, neb3:customNeb3.value }));
+    localStorage.setItem('htms_particle_count', String(particleCount.value));
+    createStarfield(parseInt(particleCount.value,10)||0);
+  }
+
+  // per-theme particle selector change -> save mapping and update particles immediately
+  if(particleTypeSelect){
+    particleTypeSelect.addEventListener('change', ()=>{
+      try{
+        const themeName = localStorage.getItem('htms_theme') || 'default';
+        const map = JSON.parse(localStorage.getItem('htms_theme_particles')||'{}');
+        map[themeName] = particleTypeSelect.value;
+        localStorage.setItem('htms_theme_particles', JSON.stringify(map));
+        updateParticlesForTheme(themeName);
+      }catch(e){ console.error(e); }
+    });
+  }
+
+  function hexToRgba(hex, alpha){
+    const h = hex.replace('#','');
+    const bigint = parseInt(h,16);
+    const r = (bigint>>16)&255; const g=(bigint>>8)&255; const b=bigint&255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function enableEffects(){
+    document.documentElement.classList.remove('no-effects');
+    const cnt = parseInt(localStorage.getItem('htms_particle_count')||String(defaults.particleCount),10) || defaults.particleCount;
+    createLoaderStars( Math.min(120, Math.max(0, Math.round(cnt/3))) );
+    createStarfield(cnt);
+    localStorage.setItem('htms_effects', 'true');
+    effectsLabel.textContent = 'Enabled';
+  }
+
+  function disableEffects(){
+    document.documentElement.classList.add('no-effects');
+    createLoaderStars(0);
+    createStarfield(0);
+    localStorage.setItem('htms_effects', 'false');
+    effectsLabel.textContent = 'Disabled';
+  }
+
+  // wire controls
+  particleCount.addEventListener('input', ()=> { particleCountLabel.textContent = particleCount.value; });
+  applyCustomBtn.addEventListener('click', ()=>{ applyCustomBackground(); alert('Custom background applied.'); });
+  effectsToggle.addEventListener('click', ()=>{ const cur = localStorage.getItem('htms_effects') !== 'false'; if(cur) disableEffects(); else enableEffects(); });
+
+  // init state
+  if(savedEffects === false || savedEffects === 'false') disableEffects(); else enableEffects();
+  // apply saved custom background on load
+  if(savedCustom) setTimeout(()=>{ setControlValues(Object.assign({}, defaults, savedCustom,{ particleCount: savedParticleCount })); applyCustomBackground(); }, 60);
+}
+
+// helper: if no saved values exist create initial stars
+if(!localStorage.getItem('htms_particle_count')) localStorage.setItem('htms_particle_count','300');
+if(!localStorage.getItem('htms_effects')) localStorage.setItem('htms_effects','true');
+// create initial loader/starfield based on saved settings
+try{ const ef = localStorage.getItem('htms_effects') !== 'false'; if(ef){ createLoaderStars(100); createStarfield(parseInt(localStorage.getItem('htms_particle_count')||'300',10)); } else { createLoaderStars(0); createStarfield(0); } }catch(e){}
 
 function closeMinecraftModal(){
   mcBackdrop.style.opacity = "0";
@@ -1008,6 +1646,141 @@ gameIframe.addEventListener("click", () => {
   gameIframe.focus();
   try { gameIframe.contentWindow.focus(); } catch (err) {}
 });
+
+/* ---------------- DIAGNOSTICS (capture runtime errors) ---------------- */
+/* diagnostics removed */
+
+/* ---------------- SEARCH + THEME SWITCHER ---------------- */
+// Search/filter games
+const searchInput = document.getElementById('gameSearch');
+const clearSearchBtn = document.getElementById('clearSearch');
+const noResultsEl = document.getElementById('noResults');
+
+function filterGames(q){
+  const cards = Array.from(document.querySelectorAll('.game-card'));
+  let visible = 0;
+  cards.forEach(c => {
+    if(!q || c.textContent.toLowerCase().includes(q.toLowerCase())){
+      c.style.display = '';
+      visible++;
+    } else {
+      c.style.display = 'none';
+    }
+  });
+  if(noResultsEl) noResultsEl.style.display = visible === 0 ? 'block' : 'none';
+}
+
+if(searchInput){
+  searchInput.addEventListener('input', (e)=> filterGames(e.target.value));
+}
+if(clearSearchBtn){
+  clearSearchBtn.addEventListener('click', ()=>{ if(searchInput) searchInput.value = ''; filterGames(''); if(searchInput) searchInput.focus(); });
+}
+
+// Theme switching
+// Only consider elements that represent theme buttons (have data-theme)
+const themeButtons = Array.from(document.querySelectorAll('.theme-btn[data-theme]'));
+const themeDropdownToggle = document.getElementById('themeDropdownToggle');
+const themeDropdownMenu = document.getElementById('themeDropdownMenu');
+const currentThemeLabel = document.getElementById('currentThemeLabel');
+
+// List of themes (order for buttons/dropdown)
+const allThemes = ['default','christmas','galaxy','ocean','neon','cozy','sunset','forest','retro','aurora','matrix','winter'];
+
+// small preview gradients for dropdown (keeps previews independent of current theme class)
+const themePreviews = {
+  christmas: 'linear-gradient(90deg,#ff0000,#00a24a)',
+  galaxy: 'linear-gradient(90deg,#6b5cff,#2ec8ff)',
+  ocean: 'linear-gradient(90deg,#0077ff,#00c2ff)',
+  neon: 'linear-gradient(90deg,#39ff14,#00ffd5)',
+  cozy: 'linear-gradient(90deg,#ffbd7d,#ff8c42)',
+  default: 'linear-gradient(90deg,#666,#222)',
+  sunset: 'linear-gradient(90deg,#ff7a59,#ffcc88)',
+  forest: 'linear-gradient(90deg,#0b6623,#2e8b57)',
+  retro: 'linear-gradient(90deg,#ffcc33,#ff7a9a)',
+  aurora: 'linear-gradient(90deg,#7efcff,#2ec8ff)',
+  matrix: 'linear-gradient(90deg,#003300,#00ff66)',
+  winter: 'linear-gradient(90deg,#77d1ff,#cfeefe)'
+};
+
+function applyTheme(name){
+  const doc = document.documentElement;
+  // quick fade: add fade class, then swap theme classes, then remove fade
+  doc.classList.add('theme-fade');
+  setTimeout(()=>{
+    ['galaxy','ocean','neon','cozy','christmas','default','sunset','forest','retro','aurora','matrix','winter'].forEach(t => doc.classList.remove('theme-'+t));
+    if(name) doc.classList.add('theme-'+name);
+    themeButtons.forEach(b => b.classList.toggle('active', b.dataset.theme === name));
+    // mark the active dropdown item as well
+    document.querySelectorAll('.theme-dropdown-item').forEach(it => it.classList.toggle('active', it.dataset.theme === name));
+    if(currentThemeLabel) currentThemeLabel.textContent = (name || 'default').replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    try{ localStorage.setItem('htms_theme', name); }catch(e){}
+    // update particles for the newly applied theme
+    try{ updateParticlesForTheme(name); }catch(e){ /* ignore */ }
+    // small delay to allow CSS to reflow, then remove fade to fade back in
+    setTimeout(()=> doc.classList.remove('theme-fade'), 40);
+  }, 140);
+}
+
+themeButtons.forEach(b => b.addEventListener('click', ()=> applyTheme(b.dataset.theme)));
+
+// Build dropdown items
+if(themeDropdownMenu){
+  themeDropdownMenu.innerHTML = '';
+  allThemes.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'theme-dropdown-item';
+    item.dataset.theme = t;
+    const preview = document.createElement('div');
+    preview.className = 'theme-preview';
+    preview.style.background = themePreviews[t] || 'linear-gradient(90deg,#444,#111)';
+    const label = document.createElement('div');
+    label.className = 'theme-label';
+    label.textContent = t.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    item.appendChild(preview);
+    item.appendChild(label);
+    item.addEventListener('click', ()=>{ applyTheme(t); toggleThemeMenu(false); });
+    themeDropdownMenu.appendChild(item);
+  });
+}
+
+function toggleThemeMenu(show){
+  if(!themeDropdownMenu) return;
+  if(show){ themeDropdownMenu.classList.add('show'); themeDropdownMenu.setAttribute('aria-hidden','false'); }
+  else { themeDropdownMenu.classList.remove('show'); themeDropdownMenu.setAttribute('aria-hidden','true'); }
+}
+
+if(themeDropdownToggle){
+  themeDropdownToggle.addEventListener('click', (e)=>{ e.stopPropagation(); const isOpen = themeDropdownMenu.classList.contains('show'); toggleThemeMenu(!isOpen); });
+  // close on outside click
+  document.addEventListener('click', ()=> toggleThemeMenu(false));
+  document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') toggleThemeMenu(false); });
+}
+
+// Settings sidebar tab switching
+(function initSettingsTabs(){
+  const sidebarBtns = Array.from(document.querySelectorAll('.settings-tab-btn'));
+  const panels = Array.from(document.querySelectorAll('.settings-panel'));
+  function showPanel(name){
+    panels.forEach(p=> p.classList.toggle('active', p.id === 'panel-'+name));
+    sidebarBtns.forEach(b=> { const active = b.dataset.panel===name; b.classList.toggle('active', active); b.setAttribute('aria-selected', active? 'true':'false'); });
+  }
+  sidebarBtns.forEach(b=> b.addEventListener('click', ()=> showPanel(b.dataset.panel)));
+  // ensure default shows General
+  showPanel('general');
+})();
+
+// Apply saved theme on load (default: christmas)
+try{
+  const saved = localStorage.getItem('htms_theme') || 'christmas';
+  applyTheme(saved);
+}catch(e){ applyTheme('christmas'); }
+
+// Focus search when opening games tab
+if(gamesBtn && searchInput) gamesBtn.addEventListener('click', ()=> setTimeout(()=> searchInput.focus(), 140));
+
+// Ensure filtering runs after initial population
+setTimeout(()=> filterGames(searchInput ? searchInput.value : ''), 100);
 </script>
   <script>
 function openInAboutBlank(url) {
@@ -1025,5 +1798,43 @@ function openInAboutBlank(url) {
 }
 </script>
 
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
