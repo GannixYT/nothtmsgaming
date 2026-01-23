@@ -781,6 +781,7 @@
               <button id="themeDropdownToggle" class="theme-btn" style="display:flex; align-items:center; gap:8px;">Theme: <span id="currentThemeLabel" style="font-weight:700; margin-left:6px;">Default</span> ▾</button>
               <div id="themeDropdownMenu" class="theme-dropdown-menu" aria-hidden="true"></div>
             </div>
+            <button id="resetThemeBtn" class="theme-btn" style="margin-top:10px; padding:8px 12px;">Reset Theme</button>
           </div>
         </div>
 
@@ -1067,7 +1068,7 @@ const fullscreenBtn = document.getElementById("fullscreenBtn");
 const games = [
   "HTMS Community.html","Drive Mad.html","Baseball Bros.html","1v1.LoL.html","Ages of Conflict.html","Aviamasters.html","Bad Time Simulator.html",
   "Binding of Issac_ Wrath of the Lamb.html","Baldi's Basics Classic Remastered.html","Baldi's Basics Plus.html",
-  "Ball Blast.html","Basket Bros.html","Bendy and the Ink Machine.html","BlackJack.html",
+  "Ball Blast.html","Basket Bros.html","Bendy and the Ink Machine.html","BlackJack.html","Bottle Jump 3D.html",
   "Bowmasters.html","Buckshot Roulette.html","BuildNow.gg.html","Candy Crush.html",
   "Cluster Rush.html","Cookie Clicker.html","Crossy Road.html","Cuphead.html","Deltatraveler.html","Undertale Yellow.html",
   "Drift Hunters.html","Five Nights at Freddy's 2.html","Five Nights at Freddy's 3.html","Five Nights at Freddy's 4.html",
@@ -1088,7 +1089,7 @@ const games = [
   "Snowbattle.io.html","Space Waves.html","Sandtris.html","Rooftop Snipers.html","Rooftop Snipers 2.html",
   "Red Ball 4.html","Kindergarten.html","Kindergarten 2.html","Kindergarten 3.html","Granny.html","Granny 2.html",
   "Granny 3.html","Fortzone Battle Royale.html","Fork n Sausage.html","Final Earth 2.html","Evil Glitch.html",
-  "Escape Road.html","Elastic Man.html","Draw Joust.html","Draw the Line.html","Doodle Jump.html","Choppy Orc.html",
+  "Escape Road.html","Escape Road 2.html","Elastic Man.html","Draw Joust.html","Draw the Line.html","Doodle Jump.html","Choppy Orc.html",
   "Celeste PICO.html","BitLife.html","Bank Robbery 2.html","Angry Birds.html","Angry Birds Showdown.html",
   "Amanda the Adventurer.html","99 Balls.html","Tattletail.html","ShellShocker.html","Swordfight!!.html",
   "Super Star Car.html","Spiral Roll.html","Money Rush.html","Madalin Stunt Cars 3.html","Madalin Stunt Cars 2.html",
@@ -1566,6 +1567,12 @@ if(themeDropdownToggle){
   // close on outside click
   document.addEventListener('click', ()=> toggleThemeMenu(false));
   document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') toggleThemeMenu(false); });
+}
+
+// Reset theme button
+const resetThemeBtn = document.getElementById('resetThemeBtn');
+if(resetThemeBtn){
+  resetThemeBtn.addEventListener('click', ()=>{ applyTheme('christmas'); });
 }
 
 // Settings sidebar tab switching
